@@ -8,11 +8,9 @@ import time
 class ComputerVisionProcessor:
 
     def __init__(self, subscription_key, endpoint):
-        self.file = open('output.txt', 'w')
         self.computervision_client = ComputerVisionClient(endpoint, CognitiveServicesCredentials(subscription_key))
 
-    def read_file_remote(self, image_url):
-        lines = []
+    def read_file_remote(self, image_url, lines=[]):
         read_response = self.computervision_client.read(image_url,  raw=True)
 
         read_operation_location = read_response.headers["Operation-Location"]
@@ -27,10 +25,10 @@ class ComputerVisionProcessor:
         if read_result.status == OperationStatusCodes.succeeded:
             for text_result in read_result.analyze_result.read_results:
                 for line in text_result.lines:
+                    line.text = bytes(line.text, 'utf-8').decode('utf-8', 'ignore')
                     lines.append(line.text + '\n\n')
         
         lines.append('\n')
-        self.file.writelines(lines)
-        self.file.close()
+        return 
 
 
