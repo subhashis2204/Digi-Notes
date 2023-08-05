@@ -1,9 +1,9 @@
-pip install flask
-pip install python-dotenv
-pip install azure-storage-blob
-pip install randomname
-pip install langchain
-pip install doctran
-pip install openai
-pip install langdetect
-pip install azure-cognitiveservices-vision-computervision
+flask
+python-dotenv
+azure-storage-blob
+randomname
+langchain
+doctran
+openai
+langdetect
+azure-cognitiveservices-vision-computervision
