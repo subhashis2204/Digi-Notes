@@ -6,3 +6,4 @@ langchain
 openai
 langdetect
 azure-cognitiveservices-vision-computervision
+pydantic>=2.2.0
