@@ -75,7 +75,7 @@ PyJWT==2.8.0
 pysondb==1.6.7
 python-dotenv==1.0.0
 python-magic==0.4.27
-pywin32==306
+pypiwin32==223
 PyYAML==6.0.1
 randomname==0.2.1
 regex==2023.6.3
