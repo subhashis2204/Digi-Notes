@@ -3,7 +3,6 @@ python-dotenv
 azure-storage-blob
 randomname
 langchain
-doctran
 openai
 langdetect
 azure-cognitiveservices-vision-computervision

@@ -3,7 +3,7 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain.chat_models import AzureChatOpenAI
 from langchain.document_loaders import TextLoader
 from langchain.chains.summarize import load_summarize_chain
-from doctran import Doctran
+# from doctran import Doctran
 import openai
 from langdetect import detect_langs
 
@@ -85,24 +85,24 @@ class FlashCardGenerator:
             answer = { "message" : [], "error" : True}
         return answer
 
-    async def generate_flashcards_doctran(self):
+    # async def generate_flashcards_doctran(self):
         
-        try:
-            doctran = Doctran(openai_api_key='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', openai_model = 'gpt-3.5-turbo-0613')
+    #     try:
+    #         doctran = Doctran(openai_api_key='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', openai_model = 'gpt-3.5-turbo-0613')
 
-            with open('output.txt', 'r') as f:
-                content = f.read()
+    #         with open('output.txt', 'r') as f:
+    #             content = f.read()
 
-            document = doctran.parse(content=content)
+    #         document = doctran.parse(content=content)
 
-            response = await document.interrogate().execute()
-            results = response.extracted_properties
+    #         response = await document.interrogate().execute()
+    #         results = response.extracted_properties
 
-        except Exception as e:
-            print(e)
-            results = []
+    #     except Exception as e:
+    #         print(e)
+    #         results = []
 
-        return results
+    #     return results
     
     def generate_summary(self):
         answer = None
