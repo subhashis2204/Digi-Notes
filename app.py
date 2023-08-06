@@ -2,22 +2,13 @@ from flask import Flask, jsonify, request
 from dotenv import load_dotenv
 import uuid
 from utils.azure_blob_utils import ComputerVisionProcessor
-from azure.storage.blob import ContainerClient, ContentSettings, BlobServiceClient
+from azure.storage.blob import ContainerClient, ContentSettings
 from utils.azure_openai_utils import FlashCardGenerator
 import os
-import json
-from pysondb import getDb
-import randomname
 import codecs
-from langdetect import detect_langs
-
-
-db = getDb('db.json')
-
 import time
 
 load_dotenv()
-
 
 connection_string =  os.environ['STORAGE_ENDPOINT']
 
@@ -107,17 +98,18 @@ def upload_image():
 
     return answer
 
-@app.route('/uploads/api/v1/summary', methods=['GET'])
+@app.route('/uploads/api/v1/uploads/summary', methods=['GET'])
 def generate_summary():
     gptClient = FlashCardGenerator(gpt_key, gpt_endpoint, gpt_deployment_name)
     answer = gptClient.generate_summary()
 
     return answer
 
-@app.route('/uploads/api/v1/upload', methods=['POST'])
+@app.route('/uploads/api/v1/uploads', methods=['POST'])
 def upload_file():
     image_files = request.files.getlist('files')
     visionClient = ComputerVisionProcessor(key, endpoint)
+    gptClient = FlashCardGenerator(gpt_key, gpt_endpoint, gpt_deployment_name)
     file_urls = []
 
     try:
@@ -160,9 +152,10 @@ def upload_file():
 
         # output_file.close()
 
+        content = ''
 
-        # with codecs.open('output.txt', 'r', encoding='utf-8', errors='ignore') as f:
-        #     content = f.read()
+        with codecs.open('output.txt', 'r', encoding='utf-8', errors='ignore') as f:
+            content = f.read()
 
         # print(content)
 
@@ -182,7 +175,11 @@ def upload_file():
         # Replace the 'db.add(new_session)' with your actual database code
         # db.add(new_session)
 
-        return jsonify({'message': 'Output File updated successfully'})
+        print('hello world')
+
+        gptClient.generate_vector_db()
+
+        return jsonify({'message':content})
 
     except Exception as e:
         print(e)
@@ -213,6 +210,15 @@ def generate_flashcards():
 
     return answer
     # return jsonify({'message': answer})
+
+@app.route('/uploads/api/v1/uploads/questions', methods=['GET'])
+def questions_and_answers():
+    query = request.args.get('query')
+
+    gptClient = FlashCardGenerator(gpt_key, gpt_endpoint, gpt_deployment_name)
+    answer = gptClient.questions_and_answers(query)
+
+    return answer
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8000, debug=True)

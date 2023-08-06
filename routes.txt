@@ -1,0 +1,4 @@
+/uploads/api/v1/uploads             - upload image files
+/uploads/api/v1/uploads/summary     - generate summary
+/uploads/api/v1/uploads/flashcards  - generate flashcards
+/uploads/api/v1/uploads/chats       - query chat 
