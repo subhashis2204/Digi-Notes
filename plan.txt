@@ -1,0 +1,5 @@
+upload a pdf or image
+write the input as txt
+generate flashcards
+
+maintain a db that stores the data when the set was last revised using supermemo2 algorithm

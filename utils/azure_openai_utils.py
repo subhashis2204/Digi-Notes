@@ -103,25 +103,6 @@ class FlashCardGenerator:
             print(e)
             answer = { "message" : [], "error" : True}
         return answer
-
-    # async def generate_flashcards_doctran(self):
-        
-    #     try:
-    #         doctran = Doctran(openai_api_key='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', openai_model = 'gpt-3.5-turbo-0613')
-
-    #         with open('output.txt', 'r') as f:
-    #             content = f.read()
-
-    #         document = doctran.parse(content=content)
-
-    #         response = await document.interrogate().execute()
-    #         results = response.extracted_properties
-
-    #     except Exception as e:
-    #         print(e)
-    #         results = []
-
-    #     return results
     
     def generate_summary(self):
         answer = None
