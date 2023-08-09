@@ -54,11 +54,11 @@ class FlashCardGenerator:
             response = chain.run(input_documents=loader, question=query)
 
             print(response)
-            answer = { "message": json.loads(response), "error" : False }
+            answer = json.loads(response)
 
         except Exception as e:
             print(e)
-            answer = { "message" : [], "error" : True}
+            answer = []
 
 
         return answer
@@ -114,11 +114,11 @@ class FlashCardGenerator:
             chain = load_summarize_chain(llm=self.llm, chain_type="map_reduce")
             summary = chain.run(docs)
 
-            answer = { "message": summary, "error" : False }
+            answer = summary
         except Exception as e:
             print(e)
 
-            answer = { "message" : [], "error" : True}
+            answer = 'Sorry, I am unable to summarize the given text'
 
         return answer
     

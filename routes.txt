@@ -2,3 +2,29 @@
 /uploads/api/v1/uploads/summary     - generate summary
 /uploads/api/v1/uploads/flashcards  - generate flashcards
 /uploads/api/v1/uploads/chats       - query chat 
+
+
+
+GET  /  - home route
+POST /uploads - upload image route
+GET  /uploads/:id - get the data for one document
+GET  /uploads/:id/chat/initialize - initialize the chat session
+GET  /uploads/:id/chat ? q='query goes here' - send questions
+
+
+{
+  "_id": {
+    "$oid": "64d0920b6121e2289c1fe4e3"
+  },
+  "image_urls": [
+    "https://mlsademo.blob.core.windows.net/imgdata/3850ff88-630d-4389-9cdc-237583223a2bWhatsApp%20Image%202023-08-02%20at%2022.01.472.jpg",
+    "https://mlsademo.blob.core.windows.net/imgdata/9085e522-3ef3-4d6e-a000-a80f8d847ec7WhatsApp%20Image%202023-08-02%20at%2022.01.47.jpg"
+  ],
+  "content": "INTRODUCTION\n\nIn his will the former janitor left $2 million to his stepkids and\n\nmore than $6 million to his local hospital and library.\n\nThose who knew Read were baffled. Where did he get all that\n\nmoney?\n\nIt turned out there was no secret. There was no lottery win and\n\nno inheritance. Read saved what little he could and invested it\n\nin blue chip stocks. Then he waited, for decades on end, as tiny\n\nsavings compounded into more than $8 million.\n\nThat's it. From janitor to philanthropist.\n\nA few months before Ronald Read died, another man named\n\nRichard was in the news.\n\nRichard Fuscone was everything Ronald Read was not. A\n\nHarvard-educated Merrill Lynch executive with an MBA,\n\nFuscone had such a successful career in finance that he retired\n\nin his 40s to become a philanthropist. Former Merrill CEO\n\nDavid Komansky praised Fuscone's \"business savvy, leadership\n\nskills, sound judgment and personal integrity.\" Crain's business\n\nmagazine once included him in a \"40 under 40\" list of successful\n\nbusinesspeople.2\n\nBut then-like the gold-coin-skipping tech executive-\n\neverything fell apart.\n\nIn the mid-200os Fuscone borrowed heavily to expand an\n\n18,000-square foot home in Greenwich, Connecticut that had II\n\nbathrooms, two elevators, two pools, seven garages, and cost more\n\nthan $90,000 a month to maintain.\n\nThen the 2008 financial crisis hit.\n\nThe crisis hurt virtually everyone's finances. It apparently\n\nturned Fuscone's into dust. High debt and illiquid assets left\n\nhim bankrupt. \"I currently have no income,\" he allegedly told a\n\nbankruptcy judge in 2008.\n\nFirst his Palm Beach house was foreclosed.\n\nIn 2014 it was the Greenwich mansion's turn.\n\nFive months before Ronald Read left his fortune to charity,\n\n3\n\n\nINTRODUCTION\n\nThese soft skills are, I've come to realize, greatly underappreciated.\n\nFinance is overwhelmingly taught as a math-based field, where\n\nyou put data into a formula and the formula tells you what to do,\n\nand it's assumed that you'll just go do it.\n\nThis is true in personal finance, where you're told to have a six-\n\nmonth emergency fund and save 10% of your salary.\n\nIt's true in investing, where we know the exact historical\n\ncorrelations between interest rates and valuations.\n\nAnd it's true in corporate finance, where CFOs can measure\n\nthe precise cost of capital.\n\nIt's not that any of these things are bad or wrong. It's that\n\nknowing what to do tells you nothing about what happens in\n\nyour head when you try to do it.\n\nTwo topics impact everyone, whether you are interested in them\n\nor not: health and money.\n\nThe health care industry is a triumph of modern science, with\n\nrising life expectancy across the world. Scientific discoveries have\n\nreplaced doctors' old ideas about how the human body works, and\n\nvirtually everyone is healthier because of it.\n\nThe money industry-investing, personal finance, business\n\nplanning-is another story.\n\nFinance has scooped up the smartest minds coming from top\n\nuniversities over the last two decades. Financial Engineering was\n\nthe most popular major in Princeton's School of Engineering a\n\ndecade ago. Is there any evidence it has made us better investors?\n\nI have seen none.\n\nThrough collective trial and error over the years we learned\n\nhow to become better farmers, skilled plumbers, and advanced\n\nchemists. But has trial and error taught us to become better with\n\nour personal finances? Are we less likely to bury ourselves in\n\ndebt? More likely to save for a rainy day? Prepare for retirement?\n\n\n",
+  "timestamp": {
+    "$date": "2023-08-07T06:41:15.544Z"
+  },
+  "last_updated": {
+    "$date": "2023-08-07T06:41:15.544Z"
+  }
+}
