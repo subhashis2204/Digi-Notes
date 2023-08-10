@@ -12,13 +12,7 @@ from langchain.chains import ConversationalRetrievalChain
 from transformers import GPT2TokenizerFast
 from flask import jsonify
 
-db = None
-qa = None
-chat_history = []
-
 class FlashCardGenerator:
-    llm = None
-    embedder = None
     def __init__(self, subscription_key, endpoint, deployment_name):
         self.llm = AzureChatOpenAI(
             openai_api_base=endpoint,
@@ -34,13 +28,9 @@ class FlashCardGenerator:
             openai_api_type='azure', 
             openai_api_version='2023-05-15'
         )
-        
-        self.openai_api_key = subscription_key
-        self.openai_api_base = endpoint
-        self.openai_api_type = 'azure'
-        self.openai_api_version = '2023-05-15'
-        self.deployment_chat = deployment_name
-        self.deployment_embedding = 'openaiembedding2204'
+        self.qa = None
+        self.db = None
+        self.chat_history = []
 
     def generate_flashcards(self):
         loader = TextLoader("output.txt", encoding='utf-8').load()
@@ -60,48 +50,6 @@ class FlashCardGenerator:
             print(e)
             answer = []
 
-
-        return answer
-    
-
-    def generate_flashcards_openai(self):
-        
-        content = ''
-        with open('output.txt', 'r', encoding='utf-8') as f:
-            content = f.read()
-
-        print(content)
-
-        languages = detect_langs(content)
-        l = [lang.lang for lang in languages]
-        print(l)
-        t = ''
-        for lang in l:
-            t = t + lang + ' '
-
-        content = [
-            {
-                "role" : "system",
-                "content" : "You are a teacher"
-            },
-            {
-                "role" : "user",
-                "content" : f"Text contains these ${t} languages. Input : " + content + " Output : short questions and answers on the given text"
-            }
-        ]
-
-        try:
-            response = openai.ChatCompletion.create(
-                engine=self.deployment_name,
-                messages=content
-            )            
-
-            print(response)
-            answer = { "message": json.loads(response), "error" : False }
-
-        except Exception as e:
-            print(e)
-            answer = { "message" : [], "error" : True}
         return answer
     
     def generate_summary(self):
@@ -123,9 +71,7 @@ class FlashCardGenerator:
         return answer
     
     def generate_vector_db(self):
-        global db
-        global qa
-
+        self.db = None
         text = ''
         with open('output.txt', 'r', encoding='utf-8') as f:
             text = f.read()
@@ -143,18 +89,16 @@ class FlashCardGenerator:
 
         documents = text_splitter.create_documents([text])
     
-        db = FAISS.from_documents(documents, self.embedder)
+        self.db = FAISS.from_documents(documents, self.embedder)
 
-        qa = ConversationalRetrievalChain.from_llm(self.llm, db.as_retriever())
+        self.qa = ConversationalRetrievalChain.from_llm(self.llm, self.db.as_retriever())
 
         return 
-
     
     def questions_and_answers(self, query):
-        global qa 
-        global chat_history
+        print(self.qa)
 
-        result = qa({"question" : query, "chat_history" : chat_history})
+        result = self.qa({"question" : query, "chat_history" : self.chat_history})
 
         if result and result['answer']:
             return jsonify({"response" : result["answer"]}), 200

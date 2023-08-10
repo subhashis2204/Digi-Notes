@@ -1,26 +1,34 @@
 import ListItem from "./Listitem"
 
-function Sidebar() {
-  const content = [
-    {
-      id: 1,
-      title: "Node.js Assignment",
-      isDue: true,
-    },
-    {
-      id: 2,
-      title: "Biology Homework",
-      isDue: false,
-    },
-    {
-      id: 3,
-      title: "HR Assignment",
-      isDue: true,
-    },
-  ]
+function Sidebar({ content, setDocument }) {
+  // const content = [
+  //   {
+  //     id: 1,
+  //     title: "Node.js Assignment",
+  //     isDue: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Biology Homework",
+  //     isDue: false,
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "HR Assignment",
+  //     isDue: true,
+  //   },
+  // ]
 
   const renderedItems = content.map((item) => {
-    return <ListItem key={item.id} title={item.title} isDue={item.isDue} />
+    return (
+      <ListItem
+        key={item._id}
+        id={item._id}
+        title={item.title}
+        isDue={item.isDue}
+        setDocument={setDocument}
+      />
+    )
   })
 
   return (

@@ -1,9 +1,9 @@
-import Slider from "react-slick"
 import Flashcard from "./Flashcard"
 import { FlashcardArray } from "react-quizlet-flashcard"
 import InputBox from "./InputBox"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
+import Slider from "react-slick"
 import "./customcss.css"
 import AnswerBox from "./AnswerBox"
 
@@ -109,7 +109,7 @@ function Chatbox() {
             12th August, 2023
           </span>
         </div>
-        {/* <section></section> */}
+        <section></section>
         <div className="py-2 grid grid-cols-10 gap-8">
           <div className="col-span-4 col-start-1 flex items-center justify-center">
             <Slider {...settings} className="max-w-[25rem] mb-8">

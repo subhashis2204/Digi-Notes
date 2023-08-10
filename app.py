@@ -12,7 +12,7 @@ from pymongo import MongoClient, ReturnDocument
 from datetime import datetime
 from bson import ObjectId
 import concurrent.futures
-
+from flask_cors import CORS
 
 load_dotenv()
 
@@ -34,10 +34,11 @@ client = MongoClient("mongodb://localhost:27017")
 db = client.users
 collection = db.users
 
+CORS(app)
 
 @app.route('/')
 def home_route():
-    response = collection.find({}, {"image_url" : 1, "timestamp" : 1, "last_updated" : 1})
+    response = collection.find({}, {"image_url" : 1, "timestamp" : 1, "last_updated" : 1, "title" : 1})
 
     documents = []
     for document in response:
@@ -48,6 +49,8 @@ def home_route():
 
 @app.route('/uploads', methods=['POST'])
 def upload_route():
+    # collection.delete_many({})
+
     image_files = request.files.getlist('files')
     visionClient = ComputerVisionProcessor(key, endpoint)
     file_urls = []
@@ -66,32 +69,26 @@ def upload_route():
 
         if len(file_urls) == 0:
             return jsonify({'message': 'No files to process'}), 400
-
-        print(file_urls)
         
+        # sending the image files to the Azure Vision API
+
         lines = []
         for url in file_urls:
             visionClient.read_file_remote(url, lines)
 
-        print('OCR completed')
-
-        print(lines)
+        # writing the OCR results to the file
 
         with codecs.open('output.txt', 'w', encoding='utf-8', errors='ignore') as f:
             f.writelines(lines)
 
-        f.close()
+        # reading the OCR results from the file
 
-        # content = ''
-
-        # with codecs.open('output.txt', 'r', encoding='utf-8', errors='ignore') as f:
-        #     content = f.read()
-
-        # gptClient.generate_vector_db()
-
+        content = ''
+        with codecs.open('output.txt', 'r', encoding='utf-8', errors='ignore') as f:
+            content = f.read()
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
-            # Submit the tasks to the executor
+            # Submit tasks to the threads pool
             flashcards_future = executor.submit(gptClient.generate_flashcards)
             summary_future = executor.submit(gptClient.generate_summary)
 
@@ -99,48 +96,24 @@ def upload_route():
             flashcards_result = flashcards_future.result()
             summary_result = summary_future.result()
 
-        # summary = gptClient.generate_summary()
-
-        # print("summary\n\n")
-        # print(summary)
-
-        # print("\n\n")
-
-
-        # flashCards = gptClient.generate_flashcards()
-
-        # print("flashcards\n\n")
-        # print(flashCards)
-
-        print("\n\n")
-
-        print(flashcards_result)
-
-        print("\n\n")
-
-        print(summary_result)
-
-        print("\n\n")
-
         sample_data = {
+            'title' : 'Sample Title',
             'image_urls': file_urls,
             'summary': summary_result,
+            'content' : content,
             'flashcards': flashcards_result,
             'timestamp': datetime.utcnow(),
             'last_updated': datetime.utcnow()
         }
 
-        response = collection.insert_one(sample_data)
+        collection.insert_one(sample_data)
 
-        print(response)
+        print(sample_data)
 
         return jsonify({'message': 'Files uploaded successfully'})
 
     except Exception as e:
-
-        # for url in file_urls:
-        #     container.delete_blob(url.split('/')[-1])
-
+        print(e)
         return jsonify({'message': 'Error uploading files'}), 500
 
 
@@ -151,7 +124,6 @@ def get_document_id(id):
     response = collection.find_one_and_update(
         {"_id" : object_id}, 
         {"$set" : {"last_updated" : datetime.utcnow()}},
-        # {"_id" : 1, "last_updated" : 1}, 
         return_document=ReturnDocument.AFTER
     )
 
@@ -159,27 +131,27 @@ def get_document_id(id):
 
     return jsonify({"answer": response})
 
+@app.route('/uploads/<string:id>/chats/initialize', methods=['POST'])
+def get_chat_initalized(id):
+    object_id = ObjectId(id)
 
-@app.route('/uploads/api/v1/uploads/summary', methods=['GET'])
-def generate_summary():
-    answer = gptClient.generate_summary()
+    response = collection.find_one({"_id" : object_id})
+    response["_id"] = str(response["_id"])
 
-    return answer
+    with open('output.txt', 'w', encoding='utf-8') as f:
+        f.write(response['content'])
 
-@app.route('/uploads/api/v1/uploads/flashcards', methods=['GET'])
-def generate_flashcards():
-    answer = gptClient.generate_flashcards()
+    gptClient.generate_vector_db()
 
-    return answer
+    return jsonify({"answer": True, "error" : []})
 
-@app.route('/uploads/api/v1/uploads/questions', methods=['GET'])
-def questions_and_answers():
+@app.route('/uploads/<string:id>/chats', methods=['GET'])
+def get_chat():
     query = request.args.get('query')
-    answer = gptClient.questions_and_answers(query)
 
-    return answer
+    response = gptClient.questions_and_answers(query)
 
-
+    return response
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8000, debug=True)
